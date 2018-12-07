@@ -37,7 +37,7 @@ public class CategoriaRescource {
 		return ResponseEntity.created(uri).body(categorySaved);
 	}
 	
-	
+		
 	@GetMapping("/{codigo}")
 	public Categoria findById(@PathVariable Long codigo) {
 		return this.categoriaRepository.findById(codigo).get();		
