@@ -32,7 +32,7 @@ public class RestApiExceptionHandle extends ResponseEntityExceptionHandler {
 		
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setUserMessage(messagePropertie.getMessage("invalid.message", null, LocaleContextHolder.getLocale()));
-		errorResponse.setDeveloperMessage(ex.getCause().toString());
+		errorResponse.setDeveloperMessage(null != ex.getCause() ? ex.getCause().toString() : ex.toString());
 		
 		return super.handleExceptionInternal(ex, errorResponse, headers, HttpStatus.BAD_REQUEST, request);
 	}
@@ -62,7 +62,6 @@ public class RestApiExceptionHandle extends ResponseEntityExceptionHandler {
 			String developerMessage = errorField.toString();
 			errors.add(new ErrorResponse(userMessage, developerMessage));			
 		});
-		
 		return errors;
 	}
 }
