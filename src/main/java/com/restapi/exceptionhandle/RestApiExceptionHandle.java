@@ -3,9 +3,11 @@ package com.restapi.exceptionhandle;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tomcat.util.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,6 +54,15 @@ public class RestApiExceptionHandle extends ResponseEntityExceptionHandler {
 		errorResponse.setDeveloperMessage(ex.toString());
 		
 		return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler({DataIntegrityViolationException.class})
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setUserMessage(messagePropertie.getMessage("operation-not-allowed", null, LocaleContextHolder.getLocale()));
+		errorResponse.setDeveloperMessage(org.flywaydb.core.internal.util.ExceptionUtils.getRootCause(ex).getMessage());
+		//errorResponse.setDeveloperMessage(ExceptionUtils.getRootCauseMessage(ex)); TODO WITH COMMONS-LANG3
+		return this.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
 	private List<ErrorResponse> createErrorList(BindingResult bindingResult){

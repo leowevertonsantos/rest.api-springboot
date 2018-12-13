@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.restapi.model.enums.TypeLaunches;
 
@@ -26,23 +27,28 @@ public class Launch {
 	
 	private String description;
 	
+	@NotNull
 	@Column(name="expiration_date")
 	private LocalDate expirationDate;
 	
 	@Column(name="payment_date")
 	private LocalDate paymentDate;
 	
+	@NotNull
 	@Column(name="currency_value")
 	private BigDecimal currencyValue;
 	private String observation;
-	
+
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TypeLaunches type;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="category_code")
 	private Category category;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="person_code")
 	private Person person;
