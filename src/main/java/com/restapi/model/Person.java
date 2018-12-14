@@ -105,4 +105,8 @@ public class Person {
 			return false;
 		return true;
 	}
+
+	public boolean isAtivo() {
+		return this.status;
+	}
 }

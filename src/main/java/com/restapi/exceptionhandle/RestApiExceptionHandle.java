@@ -3,7 +3,6 @@ package com.restapi.exceptionhandle;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tomcat.util.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -63,6 +62,14 @@ public class RestApiExceptionHandle extends ResponseEntityExceptionHandler {
 		errorResponse.setDeveloperMessage(org.flywaydb.core.internal.util.ExceptionUtils.getRootCause(ex).getMessage());
 		//errorResponse.setDeveloperMessage(ExceptionUtils.getRootCauseMessage(ex)); TODO WITH COMMONS-LANG3
 		return this.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<Object> handlePersonNotExistOrInativeException(com.restapi.service.Exception.PersonNotExistOrInativeException ex, WebRequest request){
+		ErrorResponse error = new ErrorResponse();
+		error.setUserMessage(this.messagePropertie.getMessage("person.inactive", null, LocaleContextHolder.getLocale()));
+		error.setDeveloperMessage(null != ex.getCause() ? ex.getCause().toString() : ex.toString());
+		return this.handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
 	private List<ErrorResponse> createErrorList(BindingResult bindingResult){
